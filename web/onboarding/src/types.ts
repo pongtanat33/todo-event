@@ -21,3 +21,11 @@ export interface Captcha {
   question: string
   expires_at: string
 }
+
+export interface UserEvent {
+  id: string
+  aggregate_id: string
+  type: string
+  payload: any
+  created_at: string
+}

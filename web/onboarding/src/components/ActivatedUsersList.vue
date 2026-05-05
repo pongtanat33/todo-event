@@ -25,7 +25,27 @@
             <span>{{ formatDate(u.created_at) }}</span>
           </div>
           <div v-if="u.bio" class="user-bio">{{ u.bio }}</div>
-          <button class="btn-link" @click="startEdit(u)">Edit</button>
+          <div class="user-actions-row">
+            <button class="btn-link" @click="startEdit(u)">Edit</button>
+            <button class="btn-link" @click="toggleHistory(u)">
+              {{ historyFor === u.id ? 'Hide history' : 'History' }}
+            </button>
+          </div>
+
+          <div v-if="historyFor === u.id" class="history-panel">
+            <div v-if="historyLoading" class="empty">Loading history…</div>
+            <div v-else-if="historyError" class="form-error">{{ historyError }}</div>
+            <div v-else-if="historyEvents.length === 0" class="empty">No events recorded.</div>
+            <ol v-else class="history-list">
+              <li v-for="ev in historyEvents" :key="ev.id" class="history-item">
+                <div class="history-head">
+                  <span class="history-type">{{ shortType(ev.type) }}</span>
+                  <span class="history-time">{{ formatDate(ev.created_at) }}</span>
+                </div>
+                <pre class="history-payload">{{ JSON.stringify(ev.payload, null, 2) }}</pre>
+              </li>
+            </ol>
+          </div>
         </template>
 
         <template v-else>
@@ -51,8 +71,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { listActivated, updateContact } from '../api.ts'
-import type { User } from '../types.ts'
+import { listActivated, updateContact, getUserHistory } from '../api.ts'
+import type { User, UserEvent } from '../types.ts'
 
 const users = ref<User[]>([])
 const loading = ref(false)
@@ -62,6 +82,11 @@ const editingId = ref<string | null>(null)
 const draft = ref<{ name: string; email: string; bio: string } | null>(null)
 const editError = ref<string | null>(null)
 const saving = ref(false)
+
+const historyFor = ref<string | null>(null)
+const historyEvents = ref<UserEvent[]>([])
+const historyLoading = ref(false)
+const historyError = ref<string | null>(null)
 
 async function load() {
   loading.value = true
@@ -105,6 +130,28 @@ async function save(u: User) {
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleString()
+}
+
+function shortType(t: string): string {
+  return t.replace(/^user\./, '').replace(/_/g, ' ')
+}
+
+async function toggleHistory(u: User) {
+  if (historyFor.value === u.id) {
+    historyFor.value = null
+    return
+  }
+  historyFor.value = u.id
+  historyLoading.value = true
+  historyEvents.value = []
+  historyError.value = null
+  try {
+    historyEvents.value = await getUserHistory(u.id)
+  } catch (e: any) {
+    historyError.value = e?.message ?? 'Failed to load history'
+  } finally {
+    historyLoading.value = false
+  }
 }
 
 onMounted(load)

@@ -1,4 +1,4 @@
-import type { Captcha, User } from './types.ts'
+import type { Captcha, User, UserEvent } from './types.ts'
 
 const BASE = '/api'
 const CAPTCHA_BASE = '/captcha'
@@ -41,6 +41,10 @@ export async function updateContact(id: string, name: string, email: string, bio
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, email, bio }),
   }))
+}
+
+export async function getUserHistory(id: string): Promise<UserEvent[]> {
+  return handle(await fetch(`${BASE}/users/${id}/history`))
 }
 
 export async function completeProfile(id: string, bio: string): Promise<User> {

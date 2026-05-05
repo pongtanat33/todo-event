@@ -102,6 +102,7 @@ func main() {
 	app.Post("/users/register", userHandler.Register)
 	app.Get("/users/activated", userHandler.ListActivated)
 	app.Get("/users/:id", userHandler.GetUser)
+	app.Get("/users/:id/history", userHandler.GetHistory)
 	app.Patch("/users/:id", userHandler.UpdateContact)
 	app.Post("/users/:id/verify-email", userHandler.VerifyEmail)
 	app.Post("/users/:id/complete-profile", userHandler.CompleteProfile)

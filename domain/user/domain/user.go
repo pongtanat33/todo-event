@@ -1,6 +1,9 @@
 package domain
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type OnboardingStatus string
 
@@ -65,6 +68,14 @@ type ContactUpdatedPayload struct {
 	Name   string `json:"name"`
 	Email  string `json:"email"`
 	Bio    string `json:"bio"`
+}
+
+type UserEvent struct {
+	ID          string          `db:"id"           json:"id"`
+	AggregateID string          `db:"aggregate_id" json:"aggregate_id"`
+	Type        string          `db:"type"         json:"type"`
+	Payload     json.RawMessage `db:"payload"      json:"payload"`
+	CreatedAt   time.Time       `db:"created_at"   json:"created_at"`
 }
 
 func (u User) WithEmailVerified() User {

@@ -68,6 +68,18 @@ func (h *Handler) GetUser(c *fiber.Ctx) error {
 	return c.JSON(result.MustGet())
 }
 
+func (h *Handler) GetHistory(c *fiber.Ctx) error {
+	id := c.Params("id")
+	if id == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "missing id"})
+	}
+	result := h.useCase.GetUserHistory(c.Context(), id)
+	if result.IsError() {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "internal error"})
+	}
+	return c.JSON(result.MustGet())
+}
+
 func (h *Handler) ListActivated(c *fiber.Ctx) error {
 	result := h.useCase.ListActivatedUsers(c.Context())
 	if result.IsError() {

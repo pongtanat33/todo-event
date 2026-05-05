@@ -97,6 +97,10 @@ func (s *Service) ListActivatedUsers(ctx context.Context) mo.Result[[]domain.Use
 	return s.repo.FindActivated(ctx)
 }
 
+func (s *Service) GetUserHistory(ctx context.Context, id string) mo.Result[[]domain.UserEvent] {
+	return s.repo.FindEvents(ctx, id)
+}
+
 func (s *Service) UpdateContact(ctx context.Context, id, name, email, bio string) mo.Result[domain.User] {
 	if name == "" {
 		return mo.Err[domain.User](ErrInvalidName)

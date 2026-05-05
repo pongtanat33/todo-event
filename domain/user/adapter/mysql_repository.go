@@ -130,3 +130,16 @@ ORDER BY created_at DESC`, string(domain.StatusOnboardingComplete))
 	}
 	return mo.Ok(users)
 }
+
+func (r *MySQLRepository) FindEvents(ctx context.Context, aggregateID string) mo.Result[[]domain.UserEvent] {
+	events := []domain.UserEvent{}
+	err := r.db.SelectContext(ctx, &events, `
+SELECT id, aggregate_id, type, payload, created_at
+FROM users_events
+WHERE aggregate_id = ?
+ORDER BY created_at ASC, id ASC`, aggregateID)
+	if err != nil {
+		return mo.Err[[]domain.UserEvent](err)
+	}
+	return mo.Ok(events)
+}

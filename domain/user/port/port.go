@@ -17,6 +17,7 @@ type UseCase interface {
 	GetUser(ctx context.Context, id string) mo.Result[domain.User]
 	ListActivatedUsers(ctx context.Context) mo.Result[[]domain.User]
 	UpdateContact(ctx context.Context, id, name, email, bio string) mo.Result[domain.User]
+	GetUserHistory(ctx context.Context, id string) mo.Result[[]domain.UserEvent]
 }
 
 type Repository interface {
@@ -24,6 +25,7 @@ type Repository interface {
 	FindByID(ctx context.Context, id string) mo.Result[domain.User]
 	FindByEmail(ctx context.Context, email string) mo.Result[domain.User]
 	FindActivated(ctx context.Context) mo.Result[[]domain.User]
+	FindEvents(ctx context.Context, aggregateID string) mo.Result[[]domain.UserEvent]
 }
 
 type Publisher interface {
