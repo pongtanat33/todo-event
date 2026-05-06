@@ -62,7 +62,7 @@ func main() {
 	defer conn.Close()
 
 	if err := messaging.Subscribe(ch, messaging.TaskExchange, messaging.QueueAuditTaskEvents, func(msg messaging.Message) {
-		slog.Info("audit: received event", "type", msg.Type)
+		slog.Info("task audit: received event", "type", msg.Type)
 		if err := pushToLoki(lokiURL, msg.Type, msg.Payload); err != nil {
 			slog.Error("audit: loki push", "err", err)
 		}
@@ -71,7 +71,7 @@ func main() {
 	}
 
 	if err := messaging.Subscribe(ch, messaging.OnboardingExchange, messaging.QueueAuditUserEvents, func(msg messaging.Message) {
-		slog.Info("audit: received event", "type", msg.Type)
+		slog.Info("user audit: received event", "type", msg.Type)
 		if err := pushToLoki(lokiURL, msg.Type, msg.Payload); err != nil {
 			slog.Error("audit: loki push", "err", err)
 		}
