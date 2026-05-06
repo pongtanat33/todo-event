@@ -5,6 +5,7 @@ docker exec -i todoe-mysql mysql -u todoe -ptodoe todoe_onboarding -e "SHOW TABL
 docker exec -i todoe-mysql mysql -u todoe -ptodoe todoe_onboarding -e "DROP TABLE IF EXISTS users_events;"
 docker exec -i todoe-mysql mysql -u todoe -ptodoe todoe_onboarding -e "DROP TABLE IF EXISTS users_view;"
 docker exec -i todoe-mysql mysql -u todoe -ptodoe todoe_onboarding -e "SHOW TABLES; SELECT * FROM schema_migrations;"
+docker exec -i todoe-mysql mysql -u todoe -ptodoe todoe_onboarding -e "SELECT * FROM users_view;"
 
 1. Roll back N migrations cleanly (preferred):
 

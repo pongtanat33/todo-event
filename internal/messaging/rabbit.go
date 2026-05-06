@@ -33,6 +33,7 @@ const (
 	QueueCreditUserEvents        = "credit.user.events"
 	QueueAuthenUserEvents        = "authen.user.events"
 	QueueOnboardingCreditResults = "onboarding.credit.results"
+	QueueAuditUserEvents         = "audit.user.events"
 )
 
 type Binding struct {

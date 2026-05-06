@@ -51,6 +51,7 @@ func main() {
 	defer conn.Close()
 
 	if err := messaging.DeclareTopology(ch, []messaging.Binding{
+		{Exchange: messaging.OnboardingExchange, Queue: messaging.QueueAuditUserEvents},
 		{Exchange: messaging.UserExchange, Queue: messaging.QueueWelcomeUserEvents},
 		{Exchange: messaging.UserExchange, Queue: messaging.QueueCreditUserEvents},
 		{Exchange: messaging.UserExchange, Queue: messaging.QueueAuthenUserEvents},
@@ -77,7 +78,7 @@ func main() {
 		messaging.NewPublisher(ch, messaging.UserExchange),
 	}}
 
-	userService := userapplication.NewService(userRepo, userPublisher)
+	userService := userapplication.NewService(userRepo, userPublisher, messaging.NewPublisher(ch, messaging.OnboardingExchange))
 	userHandler := userhttp.NewHandler(userService)
 
 	// Subscribe to credit scoring results to update user credit status

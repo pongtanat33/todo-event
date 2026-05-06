@@ -122,6 +122,7 @@ services:
       - "3010:3010"
     environment:
       MONGO_URI: mongodb://root:root@mongo:27017
+      AMQP_URL: amqp://guest:guest@rabbitmq:5672/
     depends_on:
       mongo:
         condition: service_healthy
