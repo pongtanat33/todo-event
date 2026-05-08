@@ -95,12 +95,14 @@ services:
       rabbitmq:
         condition: service_healthy
 
-  audit:
+  audit1:
     build:
-      context: .
-      dockerfile: cmd/audit/Dockerfile
-    container_name: todoe-audit
+      context: cmd/audit1
+      dockerfile: Dockerfile
+    container_name: todoe-audit1
     restart: unless-stopped
+    ports:
+      - "3020:3020"
     environment:
       AMQP_URL: amqp://guest:guest@rabbitmq:5672/
       LOKI_URL: http://loki:3100
